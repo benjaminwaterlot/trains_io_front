@@ -7,13 +7,18 @@ import colors from '../colors';
 
 import Header from './Header/Header';
 import Home from './Home/Home';
+import Carousel from './Carousel/Carousel';
 
 const theme = createMuiTheme({
 	palette: {
-		primary: { main: colors.blue },
-		secondary: { main: colors.pink },
-		textPrimary: { main: colors.darkGrey },
-		textSecondary: { main: colors.mediumGrey },
+		primary: { main: colors.primary },
+		secondary: { main: colors.secondary },
+		text: {
+			primary: colors.darkGrey,
+			secondary: colors.mediumGrey,
+		},
+		// textPrimary: { main: colors.darkGrey },
+		// textSecondary: { main: colors.mediumGrey },
 	},
 });
 
@@ -39,6 +44,7 @@ const App = () => {
 					minHeight={500}
 				>
 					<Header />
+					<Carousel />
 					<Home />
 				</Box>
 			</Container>

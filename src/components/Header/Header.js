@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
 		fontWeight: 500,
 	},
 	sub: {
-		color: theme.palette.textSecondary.main,
+		// color: theme.palette.textSecondary.main,
 		fontWeight: 300,
 	},
 }));
