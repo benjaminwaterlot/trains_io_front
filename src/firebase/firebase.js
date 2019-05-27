@@ -17,6 +17,8 @@ class Firebase {
 		app.initializeApp(firebaseConfig);
 
 		this.db = app.firestore();
+		this.db.enablePersistence().catch(err => console.error(err));
+
 		this.watchers = this.db.collection('watchers');
 	}
 }

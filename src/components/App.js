@@ -17,13 +17,10 @@ const theme = createMuiTheme({
 			primary: colors.darkGrey,
 			secondary: colors.mediumGrey,
 		},
-		// textPrimary: { main: colors.darkGrey },
-		// textSecondary: { main: colors.mediumGrey },
 	},
 });
 
 const useStyles = makeStyles(theme => ({
-	root: {},
 	box: {
 		boxShadow: `0px 2px 20px ${colors.mediumGrey}22`,
 	},
@@ -34,7 +31,7 @@ const App = () => {
 
 	return (
 		<ThemeProvider theme={theme}>
-			<Container className={`App ${classes.root}`} maxWidth="lg">
+			<Container className={`App ${classes.root}`} maxWidth="md">
 				<Box
 					bgcolor="white"
 					borderRadius={15}

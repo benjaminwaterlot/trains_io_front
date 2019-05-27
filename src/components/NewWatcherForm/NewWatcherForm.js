@@ -3,10 +3,11 @@ import { FirebaseContext } from '../../firebase';
 
 import AddIcon from '@material-ui/icons/Add';
 import { Box, TextField, Grid, Button } from '@material-ui/core';
-import { KeyboardDateTimePicker } from '@material-ui/pickers';
 
 import Title from '../Generic/Title';
 import Loader from '../Generic/Loader';
+import CustomDatePicker from './CustomDatePicker/CustomDatePicker';
+import colors from '../../colors';
 
 const startFields = [
 	{
@@ -23,14 +24,20 @@ const NewWatcherForm = ({ updateWatchers }) => {
 	const { watchers } = useContext(FirebaseContext);
 
 	const defaultDate = () => {
-		const date = new Date();
-		date.setHours(10, 0, 0, 0);
-		return date;
+		const start = new Date();
+		start.setHours(10, 0, 0, 0);
+
+		const end = new Date();
+		end.setHours(20, 0, 0, 0);
+
+		return { start, end };
 	};
+
 	const defaultState = {
-		from: 'Chambéry',
-		to: 'Paris',
-		day: defaultDate(),
+		from: '',
+		to: '',
+		start: defaultDate().start,
+		end: defaultDate().end,
 	};
 
 	const [fields, setFields] = useState(defaultState);
@@ -55,10 +62,16 @@ const NewWatcherForm = ({ updateWatchers }) => {
 	return (
 		<Box>
 			<Title icon={AddIcon} text="Ajouter un watcher" />
-			<Box mx={2}>
-				<Grid container spacing={4} alignItems="center">
+			<Box
+				m="auto"
+				maxWidth={600}
+				bgcolor={`${colors.secondary}22`}
+				p={4}
+				borderRadius={10}
+			>
+				<Grid container spacing={6} alignItems="center" justify="center">
 					{startFields.map(field => (
-						<Grid item key={field.id} m={2}>
+						<Grid item key={field.id} xs={6}>
 							<TextField
 								label={field.placeholder}
 								value={fields[field.id]}
@@ -66,20 +79,22 @@ const NewWatcherForm = ({ updateWatchers }) => {
 									setFields({ ...fields, [field.id]: e.target.value })
 								}
 								margin="normal"
+								style={{ width: '100%' }}
 							/>
 						</Grid>
 					))}
-					<Grid item>
-						<KeyboardDateTimePicker
-							format="dd/MM HH:mm"
-							ampm={false}
-							value={fields.day}
-							onChange={e => setFields({ ...fields, day: e })}
-							disablePast
-							hideTabs
-							inputVariant="standard"
-							style={{ top: 11 }}
-							minutesStep={5}
+					<Grid item xs={6}>
+						<CustomDatePicker
+							placeholder=""
+							value={fields.start}
+							onChange={e => setFields({ ...fields, start: e })}
+						/>
+					</Grid>
+					<Grid item xs={6}>
+						<CustomDatePicker
+							placeholder=""
+							value={fields.end}
+							onChange={e => setFields({ ...fields, end: e })}
 						/>
 					</Grid>
 					<Grid item>
