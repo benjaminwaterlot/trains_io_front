@@ -17,9 +17,8 @@ class Firebase {
 		app.initializeApp(firebaseConfig);
 
 		this.db = app.firestore();
+		this.watchers = this.db.collection('watchers');
 	}
-
-	watchers = () => this.db.collection('watchers');
 }
 
 export default Firebase;

@@ -1,16 +1,21 @@
-import React, { memo, useContext, useEffect, useState } from 'react';
-import { Box, Button, CircularProgress } from '@material-ui/core';
+import React, { useContext, useState, memo } from 'react';
+
+import { Box, Button, CircularProgress, Grow } from '@material-ui/core';
+import NewWatcherForm from '../NewWatcherForm/NewWatcherForm';
 
 import { FirebaseContext } from '../../firebase';
+import WatchersList from '../WatchersList/WatchersList';
 
-const Home = props => {
-	const Firebase = useContext(FirebaseContext);
+const Home = () => {
+	const { watchers } = useContext(FirebaseContext);
+
 	const [loading, setLoading] = useState(false);
+	const [lastWatcher, setLastWatcher] = useState({});
 
 	const handleList = async () => {
 		setLoading(true);
 
-		const query = await Firebase.db.collection('watchers').get();
+		const query = await watchers.get();
 		const docs = query.docs.map(doc => doc.data());
 
 		docs.forEach(doc => console.log(doc));
@@ -18,45 +23,41 @@ const Home = props => {
 		setLoading(false);
 	};
 
-	const handleAdd = async () => {
-		const newDoc = await Firebase.db
-			.collection('watchers')
-			.add({ surName: 'Benjamin', lastName: 'Waterlot' });
-
-		console.log(newDoc);
-	};
-
 	const handleClear = async () => {
-		const docs = await Firebase.db
-			.collection('watchers')
-			.where('surName', '==', 'Benjamin')
-			.get();
+		const docs = await watchers.get();
 
 		docs.forEach(async doc => await doc.ref.delete());
 		console.log('Removed all docs.');
 	};
 
+	const handleNewWatcher = () => {
+		setLastWatcher({});
+	};
+
 	return (
-		<Box display="flex" flexDirection="column" alignItems="center" my={5}>
-			<Box display="flex" justifyContent="center">
-				<Box m={2}>
-					<Button variant="outlined" color="primary" onClick={handleList}>
-						Get users
-					</Button>
+		<React.Fragment>
+			<Box display="flex" flexDirection="column" alignItems="center" my={5}>
+				<Box display="flex" justifyContent="center">
+					<Box m={2}>
+						<Button variant="outlined" color="primary" onClick={handleList}>
+							Get users
+						</Button>
+					</Box>
+					<Box m={2}>
+						<Button variant="text" color="secondary" onClick={handleClear}>
+							Remove users
+						</Button>
+					</Box>
 				</Box>
-				<Box m={2}>
-					<Button variant="outlined" color="secondary" onClick={handleAdd}>
-						Add user
-					</Button>
-				</Box>
-				<Box m={2}>
-					<Button variant="text" color="secondary" onClick={handleClear}>
-						Remove users
-					</Button>
-				</Box>
+				<Grow in={loading}>
+					<Box>
+						<CircularProgress />
+					</Box>
+				</Grow>
 			</Box>
-			<Box m={3}>{loading ? <CircularProgress /> : null}</Box>
-		</Box>
+			<WatchersList lastWatcher={lastWatcher} />
+			<NewWatcherForm addedWatcher={handleNewWatcher} />
+		</React.Fragment>
 	);
 };
 

@@ -1,8 +1,11 @@
 import React from 'react';
-import Header from './Header/Header';
-import { Container, createMuiTheme, Box } from '@material-ui/core';
+
 import { ThemeProvider, makeStyles } from '@material-ui/styles';
+import { Container, createMuiTheme, Box } from '@material-ui/core';
+
 import colors from '../colors';
+
+import Header from './Header/Header';
 import Home from './Home/Home';
 
 const theme = createMuiTheme({
