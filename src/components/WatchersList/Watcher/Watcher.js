@@ -1,20 +1,21 @@
 import React, { memo } from 'react';
 import format from 'date-fns/format';
+import PropTypes from 'prop-types';
 
 import { Typography, Grid, Grow, Box } from '@material-ui/core';
 import Arrow from '../../Generic/Icons/Arrow';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
-const formatDateTime = timestamp => {
-	const formatted = format(timestamp, "dd/MM hh'h'");
+const formatDateTime = dateToFormat => {
+	const formatted = format(dateToFormat, "dd/MM HH'h'");
 	const [date, time] = formatted.split(' ');
 
 	return { date, time };
 };
 
-const Watcher = ({ day, from, to }) => {
-	const timestamp = new Date(day.seconds * 1000);
-	const dateTime = formatDateTime(timestamp);
+const Watcher = ({ start, end, from, to }) => {
+	const startDT = formatDateTime(start.toDate());
+	const endDT = formatDateTime(end.toDate());
 
 	return (
 		<Grow in={true}>
@@ -22,7 +23,7 @@ const Watcher = ({ day, from, to }) => {
 				<Grid item>
 					<Box>
 						<Typography variant="subtitle2" color="textPrimary">
-							{dateTime.date}
+							{startDT.date}
 							<Typography
 								variant="subtitle2"
 								component="span"
@@ -34,7 +35,7 @@ const Watcher = ({ day, from, to }) => {
 									left: 5,
 								}}
 							>
-								{dateTime.time}
+								{startDT.time}
 							</Typography>
 						</Typography>
 						<Typography
@@ -48,7 +49,7 @@ const Watcher = ({ day, from, to }) => {
 							}}
 						>
 							<KeyboardArrowRightIcon />
-							{dateTime.date}
+							{endDT.date}
 							<Typography
 								variant="subtitle2"
 								component="span"
@@ -60,7 +61,7 @@ const Watcher = ({ day, from, to }) => {
 									left: 5,
 								}}
 							>
-								{dateTime.time}
+								{endDT.time}
 							</Typography>
 						</Typography>
 					</Box>
@@ -81,6 +82,13 @@ const Watcher = ({ day, from, to }) => {
 			</Grid>
 		</Grow>
 	);
+};
+
+Watcher.propTypes = {
+	start: PropTypes.object,
+	end: PropTypes.object,
+	from: PropTypes.string,
+	to: PropTypes.string,
 };
 
 export default memo(Watcher);

@@ -5,10 +5,10 @@ import NewWatcherForm from '../NewWatcherForm/NewWatcherForm';
 import WatchersList from '../WatchersList/WatchersList';
 
 const Home = () => {
-	const [updateList, setUpdateList] = useState({});
+	const [updateList, setUpdateList] = useState({ type: 'UPDATE' });
 
-	const handleUpdate = () => {
-		setUpdateList({});
+	const handleUpdate = option => {
+		setUpdateList({ type: option });
 	};
 
 	return (

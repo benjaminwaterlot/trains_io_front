@@ -1,5 +1,6 @@
-import React, { memo, useState, useContext, useEffect } from 'react';
+import React, { memo, useState, useContext } from 'react';
 import { FirebaseContext } from '../../firebase';
+import faker from '../../utils/faker/faker';
 
 import AddIcon from '@material-ui/icons/Add';
 import { Box, TextField, Grid, Button } from '@material-ui/core';
@@ -23,40 +24,32 @@ const startFields = [
 const NewWatcherForm = ({ updateWatchers }) => {
 	const { watchers } = useContext(FirebaseContext);
 
-	const defaultDate = () => {
-		const start = new Date();
-		start.setHours(10, 0, 0, 0);
+	const defaultState = () => {
+		const startDate = faker.date.future(1 / 12);
+		startDate.setHours(10, 0);
 
-		const end = new Date();
-		end.setHours(20, 0, 0, 0);
+		const endDate = new Date(startDate);
+		endDate.setHours(18, 0);
 
-		return { start, end };
+		return {
+			from: faker.address.city(),
+			to: faker.address.city(),
+			start: startDate,
+			end: endDate,
+		};
 	};
 
-	const defaultState = {
-		from: '',
-		to: '',
-		start: defaultDate().start,
-		end: defaultDate().end,
-	};
-
-	const [fields, setFields] = useState(defaultState);
+	const [fields, setFields] = useState(defaultState());
 	const [loading, setLoading] = useState(false);
-
-	useEffect(() => {
-		console.log('rendered');
-		console.log(fields);
-	}, [updateWatchers]);
 
 	const handleSubmit = async () => {
 		setLoading(true);
 
 		await watchers.add({ ...fields, createdAt: Date.now() });
 
+		updateWatchers('UPDATE');
 		setFields(defaultState);
 		setLoading(false);
-
-		updateWatchers();
 	};
 
 	return (
@@ -69,14 +62,22 @@ const NewWatcherForm = ({ updateWatchers }) => {
 				p={4}
 				borderRadius={10}
 			>
-				<Grid container spacing={6} alignItems="center" justify="center">
+				<Grid
+					container
+					spacing={6}
+					alignItems="center"
+					justify="center"
+				>
 					{startFields.map(field => (
 						<Grid item key={field.id} xs={6}>
 							<TextField
 								label={field.placeholder}
 								value={fields[field.id]}
 								onChange={e =>
-									setFields({ ...fields, [field.id]: e.target.value })
+									setFields({
+										...fields,
+										[field.id]: e.target.value,
+									})
 								}
 								margin="normal"
 								style={{ width: '100%' }}
@@ -103,7 +104,11 @@ const NewWatcherForm = ({ updateWatchers }) => {
 							variant="contained"
 							color="primary"
 							onClick={handleSubmit}
-							style={{ boxShadow: 'none', position: 'relative', top: 8 }}
+							style={{
+								boxShadow: 'none',
+								position: 'relative',
+								top: 8,
+							}}
 						>
 							Valider
 						</Button>

@@ -18,38 +18,44 @@ const WatchersList = ({ updateList, updateWatchers }) => {
 	// Fetch the list of watchers on component update.
 	useEffect(() => {
 		(async () => {
-			if (activeWatchers.length === 0) setLoading(true);
+			if (updateList.type === 'CLEAR') {
+				setActiveWatchers([]);
+			}
+
+			if (activeWatchers.length === 0) {
+				setLoading(true);
+			}
 
 			const data = await watchers.orderBy('createdAt').get();
 			const docs = data.docs.map(doc => doc.data());
 			console.debug(docs);
 
-			setTimeout(() => {
-				setActiveWatchers(docs);
-				setLoading(false);
-			}, 500);
+			setActiveWatchers(docs);
+			setLoading(false);
 		})();
-	}, [watchers, updateList]);
+		// eslint-disable-next-line
+	}, [updateList, watchers]);
 
 	const handleClear = async () => {
 		setLoading(true);
 		const all = await watchers.get();
-		const allDeleted = all.docs.map(doc => doc.ref.delete());
+		const triggerDeletes = all.docs.map(doc => doc.ref.delete());
 
-		await Promise.all(allDeleted).catch(error => console.log(error));
-		updateWatchers();
+		await Promise.all(triggerDeletes).catch(error => console.log(error));
+
+		updateWatchers('CLEAR');
 		setLoading(false);
-		console.log('DONE !');
 	};
 
 	return (
 		<Box my={2}>
 			<Title icon={AutorenewIcon} text="Watchers actifs" />
 			<Box mx={2}>
-				{activeWatchers.map((watcher, index) => (
+				{activeWatchers.map(watcher => (
 					<Watcher
 						key={watcher.createdAt}
-						day={watcher.day}
+						start={watcher.start}
+						end={watcher.end}
 						from={watcher.from}
 						to={watcher.to}
 					/>
@@ -58,9 +64,19 @@ const WatchersList = ({ updateList, updateWatchers }) => {
 			{loading ? (
 				<Loader in={loading} />
 			) : (
-				<Box my={5} mx={2}>
+				<Box
+					my={5}
+					mx={2}
+					display="flex"
+					flexDirection="column"
+					alignItems="center"
+				>
 					{activeWatchers.length > 0 && (
-						<Button variant="outlined" color="secondary" onClick={handleClear}>
+						<Button
+							variant="outlined"
+							color="secondary"
+							onClick={handleClear}
+						>
 							<Box display="inline-flex" mr={1}>
 								<DeleteIcon />
 							</Box>
