@@ -10,6 +10,8 @@ import Loader from '../Generic/Loader';
 import CustomDatePicker from './CustomDatePicker/CustomDatePicker';
 import colors from '../../colors';
 
+import AutoComplete from '../Generic/AutoComplete';
+
 const startFields = [
 	{
 		id: 'from',
@@ -62,15 +64,11 @@ const NewWatcherForm = ({ updateWatchers }) => {
 				p={4}
 				borderRadius={10}
 			>
-				<Grid
-					container
-					spacing={6}
-					alignItems="center"
-					justify="center"
-				>
+				<Grid container spacing={6} alignItems="center" justify="center">
 					{startFields.map(field => (
 						<Grid item key={field.id} xs={6}>
-							<TextField
+							<AutoComplete />
+							{/* <TextField
 								label={field.placeholder}
 								value={fields[field.id]}
 								onChange={e =>
@@ -81,7 +79,7 @@ const NewWatcherForm = ({ updateWatchers }) => {
 								}
 								margin="normal"
 								style={{ width: '100%' }}
-							/>
+							/> */}
 						</Grid>
 					))}
 					<Grid item xs={6}>
